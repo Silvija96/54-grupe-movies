@@ -1,5 +1,6 @@
 import { usersData } from "../data/users.js";
 import { IsValid } from "../lib/IsValid.js";
+import { randomString } from "../lib/randomString.js";
 
 export function apiLogin(req, res) {
     const [err, msg] = IsValid.requiredFields(req.body, [
@@ -30,8 +31,20 @@ export function apiLogin(req, res) {
         });
     }
 
-    return res.json({
-        status: 'success',
-        msg: 'Jus buvote sekmingai prijungti prie sistemos',
-    });
+    const cookie = [
+        'loginToken=' + randomString(20),
+        'domain=localhost',
+        'path=/',
+        'max-age=3600',
+        'Same-Site=Lax',
+        'Secure',
+        'HttpOnly',
+    ];
+
+    return res
+        .set('Set-Cookie', cookie.join('; '))
+        .json({
+            status: 'success',
+            msg: 'Jus buvote sekmingai prijungti prie sistemos',
+        });
 }

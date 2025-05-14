@@ -32,6 +32,8 @@ if (formDOM) {
                     alertDOM.innerText = data.msg;
                     alertDOM.classList.remove('d-none', 'alert-danger');
                     alertDOM.classList.add('alert-success');
+
+                    location.href = '/dashboard';
                 }
             })
             .catch(err => console.log(err));

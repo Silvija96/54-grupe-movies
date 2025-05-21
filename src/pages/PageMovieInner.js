@@ -1,11 +1,10 @@
-import { moviesData } from "../data/movies.js";
+import { getMovieBySlug } from "../db/getMovieBySlug.js";
 import { formatMovieDuration } from "../lib/formatMovieDuration.js";
 import { PageTemplate } from "../templates/PageTemplate.js";
 
 export class PageMovieInner extends PageTemplate {
     constructor(req) {
-        super();
-        this.req = req;
+        super(req);
         this.activeMenuIndex = 1;
     }
 
@@ -33,26 +32,20 @@ export class PageMovieInner extends PageTemplate {
                         <img src="/img/movie-thumbnails/${movie.thumbnail}" class="movie-inner-thumbnail d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" loading="lazy"> </div> <div class="col-lg-6">
                         <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">${movie.title}</h1>
                         <p class="lead">${movie.description}</p>
-                        <p class="lead">Duration: ${formatMovieDuration(movie.durationInMinutes)}</p>
+                        <p class="lead">Duration: ${formatMovieDuration(movie.duration)}</p>
                         <p class="lead">Genre: <a href="/movies-by-category/${movie.category.toLowerCase()}">${movie.category}</a></p>
                     </div>
                 </div>
             </div>`;
     }
 
-    main() {
-        let movieObj = null;
-
-        for (const movie of moviesData) {
-            if (movie.slug === this.req.params.movieTitle) {
-                movieObj = movie;
-                break;
-            }
-        }
+    async main() {
+        const slug = this.req.params.movieTitle;
+        const data = await getMovieBySlug(slug);
 
         return `
             <main>
-                ${movieObj ? this.movieSection(movieObj) : this.notFoundSection()}
+                ${data.length ? this.movieSection(data[0]) : this.notFoundSection()}
             </main>`;
     }
 }

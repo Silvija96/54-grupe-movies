@@ -1,14 +1,20 @@
 import { PageTemplate } from "../templates/PageTemplate.js";
 
 export class PageLogin extends PageTemplate {
-    main() {
+    constructor(req) {
+        super(req);
+        this.pageJS = 'login';
+        this.activeMenuIndex = 3;
+    }
+
+    async main() {
         return `
             <main>
                 <div class="container">
                     <div class="row">
                         <div class="col-12 col-md-10 col-lg-6 col-xl-5 col-xxl-4">
                             <h1 class="display-1">Login</h1>
-                           <div class="alert alert-danger d-none" role="alert">
+                            <div id="error" class="alert alert-danger d-none" role="alert">
                                 A simple danger alert—check it out!
                             </div>
                             <form>

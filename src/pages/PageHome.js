@@ -49,7 +49,7 @@ export class PageHome extends PageTemplate {
             </div>`;
     }
 
-    main() {
+    async main() {
         return `
             <main>
                 ${this.heroSection()}

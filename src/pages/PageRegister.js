@@ -4,9 +4,10 @@ export class PageRegister extends PageTemplate {
     constructor(req) {
         super(req);
         this.pageJS = 'register';
+        this.activeMenuIndex = 4;
     }
 
-    main() {
+    async main() {
         return `
             <main>
                 <div class="container">

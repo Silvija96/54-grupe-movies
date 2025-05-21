@@ -1,7 +1,7 @@
-import { usersData } from "../data/users.js";
+import { connection } from "../db.js";
 import { IsValid } from "../lib/IsValid.js";
 
-export function apiRegister(req, res) {
+export async function apiRegister(req, res) {
     const [err, msg] = IsValid.requiredFields(req.body, [
         { field: 'email', validation: IsValid.email },
         { field: 'password', validation: IsValid.password },
@@ -14,27 +14,29 @@ export function apiRegister(req, res) {
         });
     }
 
-    let userExists = false;
+    const { email, password } = req.body;
 
-    for (const user of usersData) {
-        if (user.email === req.body.email) {
-            userExists = true;
-            break;
+    try {
+        const sql = 'SELECT * FROM users WHERE email = ?;';
+        const [result] = await connection.query(sql, [email]);
+
+        if (result.length > 0) {
+            return res.json({
+                status: 'error',
+                msg: 'Toks email jau uzimtas :P',
+            });
         }
+    } catch (error) {
+        console.log(error);
     }
 
-    if (userExists) {
-        return res.json({
-            status: 'error',
-            msg: 'Toks vartotojas jau egzistuoja',
-        });
+    try {
+        const sql = 'INSERT INTO users (email, password) VALUES (?, ?);';
+        const [result] = await connection.query(sql, [email, password]);
+        console.log(result);
+    } catch (error) {
+        console.log(error);
     }
-
-    usersData.push({
-        id: usersData.length + 1,
-        ...req.body,
-        createdAt: new Date(),
-    });
 
     return res.json({
         status: 'success',

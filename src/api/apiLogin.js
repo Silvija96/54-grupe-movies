@@ -1,8 +1,8 @@
-import { usersData } from "../data/users.js";
+import { connection } from "../db.js";
 import { IsValid } from "../lib/IsValid.js";
 import { randomString } from "../lib/randomString.js";
 
-export function apiLogin(req, res) {
+export async function apiLogin(req, res) {
     const [err, msg] = IsValid.requiredFields(req.body, [
         { field: 'email', validation: IsValid.email },
         { field: 'password', validation: IsValid.password },
@@ -15,19 +15,23 @@ export function apiLogin(req, res) {
         });
     }
 
-    let userExists = false;
+    const { email, password } = req.body;
 
-    for (const user of usersData) {
-        if (user.email === req.body.email && user.password === req.body.password) {
-            userExists = true;
-            break;
+    try {
+        const sql = 'SELECT * FROM users WHERE email = ? AND password = ?;';
+        const [result] = await connection.query(sql, [email, password]);
+
+        if (result.length === 0) {
+            return res.json({
+                status: 'error',
+                msg: 'Neteisinga email ir password kombincija, arba tokia paskyra neegzistuoja',
+            });
         }
-    }
-
-    if (!userExists) {
+    } catch (error) {
+        console.log(error);
         return res.json({
             status: 'error',
-            msg: 'Neteisinga el pasto ir slaptazodzio kombinacija, arba toks vartotojas neegzistuoja',
+            msg: 'Serverio klaida, pabandykite prisijungti veliau',
         });
     }
 

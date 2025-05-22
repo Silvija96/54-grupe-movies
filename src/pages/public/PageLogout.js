@@ -1,4 +1,4 @@
-import { PageTemplate } from "../templates/PageTemplate.js";
+import { PageTemplate } from "../../templates/PageTemplate.js";
 
 export class PageLogout extends PageTemplate {
     constructor(req) {

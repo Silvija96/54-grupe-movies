@@ -1,6 +1,6 @@
-import { getMovieBySlug } from "../db/getMovieBySlug.js";
-import { formatMovieDuration } from "../lib/formatMovieDuration.js";
-import { PageTemplate } from "../templates/PageTemplate.js";
+import { getMovieBySlug } from "../../db/getMovieBySlug.js";
+import { formatMovieDuration } from "../../lib/formatMovieDuration.js";
+import { PageTemplate } from "../../templates/PageTemplate.js";
 
 export class PageMovieInner extends PageTemplate {
     constructor(req) {

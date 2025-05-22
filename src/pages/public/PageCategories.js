@@ -1,6 +1,6 @@
-import { categoriesList } from "../components/categoriesList.js";
-import { getAllCategories } from "../db/getAllCategories.js";
-import { PageTemplate } from "../templates/PageTemplate.js";
+import { categoriesList } from "../../components/categoriesList.js";
+import { getAllCategories } from "../../db/getAllCategories.js";
+import { PageTemplate } from "../../templates/PageTemplate.js";
 
 export class PageCategories extends PageTemplate {
     constructor(req) {

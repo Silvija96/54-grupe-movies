@@ -16,6 +16,7 @@ export async function apiLogin(req, res) {
     }
 
     const { email, password } = req.body;
+    let userObj = null;
 
     try {
         const sql = 'SELECT * FROM users WHERE email = ? AND password = ?;';
@@ -25,6 +26,28 @@ export async function apiLogin(req, res) {
             return res.json({
                 status: 'error',
                 msg: 'Neteisinga email ir password kombincija, arba tokia paskyra neegzistuoja',
+            });
+        } else {
+            userObj = result[0];
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json({
+            status: 'error',
+            msg: 'Serverio klaida, pabandykite prisijungti veliau',
+        });
+    }
+
+    const loginToken = randomString(20);
+
+    try {
+        const sql = 'INSERT INTO tokens (text, user_id) VALUES (?, ?);';
+        const [result] = await connection.query(sql, [loginToken, userObj.id]);
+
+        if (result.affectedRows !== 1) {
+            return res.json({
+                status: 'error',
+                msg: 'Serverio klaida, pabandykite prisijungti veliau',
             });
         }
     } catch (error) {
@@ -36,7 +59,7 @@ export async function apiLogin(req, res) {
     }
 
     const cookie = [
-        'loginToken=' + randomString(20),
+        'loginToken=' + loginToken,
         'domain=localhost',
         'path=/',
         'max-age=3600',

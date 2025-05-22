@@ -14,5 +14,5 @@ export function cookieParser(req, res, next) {
         req.cookies[key] = value;
     }
 
-    next();
+    return next();
 }

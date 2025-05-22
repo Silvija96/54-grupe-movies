@@ -1,17 +1,17 @@
-import { getAllMovies } from "../db/getAllMovies.js";
-import { formatMovieDuration } from "../lib/formatMovieDuration.js";
-import { PageTemplate } from "../templates/PageTemplate.js";
+import { getMoviesByCategory } from "../../db/getMoviesByCategory.js";
+import { formatMovieDuration } from "../../lib/formatMovieDuration.js";
+import { PageTemplate } from "../../templates/PageTemplate.js";
 
-export class PageMovies extends PageTemplate {
+export class PageCategoryInner extends PageTemplate {
     constructor(req) {
         super(req);
-        this.activeMenuIndex = 1;
+        this.activeMenuIndex = 2;
     }
 
-    async moviesList() {
+    async moviesList(category) {
         let HTML = '';
 
-        const moviesData = await getAllMovies();
+        const moviesData = await getMoviesByCategory(category);
 
         for (const item of moviesData) {
             HTML += `
@@ -51,16 +51,19 @@ export class PageMovies extends PageTemplate {
     }
 
     async main() {
+        const category = this.req.params.categoryName;
+        const title = category[0].toUpperCase() + category.slice(1);
+
         return `
             <main>
                 <div class="container">
                     <div class="row">
                         <div class="col-12">
-                            <h1 class="display-1">All movies</h1>
+                            <h1 class="display-1">${title}</h1>
                         </div>
                     </div>
                 </div>
-                ${await this.moviesList()}
+                ${await this.moviesList(category)}
             </main>`;
     }
 }

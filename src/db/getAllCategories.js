@@ -5,7 +5,8 @@ export async function getAllCategories() {
         const sql = `
             SELECT *,
                 ( SELECT COUNT(*) FROM movies WHERE movies.category = categories.url_slug ) as count
-            FROM categories;`;
+            FROM categories
+            ORDER BY name;`;
         const [result] = await connection.query(sql);
         return result;
     } catch (error) {

@@ -3,6 +3,7 @@ import { connection } from "../db.js";
 export async function getUserData(req, res, next) {
     req.user = {
         isLoggedIn: false,
+        role: 'public',
     };
 
     if (!req.cookies.loginToken) {
@@ -24,6 +25,7 @@ export async function getUserData(req, res, next) {
         if (result.length === 1) {
             req.user = {
                 isLoggedIn: true,
+                role: 'admin',
                 ...result[0],
             };
         }

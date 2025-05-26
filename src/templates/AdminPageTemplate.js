@@ -1,27 +1,11 @@
 import { PageTemplate } from "./PageTemplate.js";
 
-export class PageAdminTemplate extends PageTemplate {
+export class AdminPageTemplate extends PageTemplate {
     constructor(req) {
         super(req);
         this.activeMenuIndex = -1;
         this.pageJS = '';
         this.isPublicPage = false;
-    }
-
-    notLoggedInContent() {
-        return `
-            <main>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <h1 class="display-1">Error: private page</h1>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <a class="btn btn-primary" href="/login">Login</a>
-                    </div>
-                </div>
-            </main>`;
     }
 
     adminSidebar() {
@@ -34,7 +18,7 @@ export class PageAdminTemplate extends PageTemplate {
                     <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="/admin">
                                     Dashboard
                                 </a>
                             </li>
@@ -44,13 +28,23 @@ export class PageAdminTemplate extends PageTemplate {
                         </h6>
                         <ul class="nav flex-column mb-auto">
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" href="/admin/categories/new">
                                     Add new
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" href="/admin/categories">
                                     All categories
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" href="/admin/categories/published">
+                                    Published categories
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" href="/admin/categories/draft">
+                                    Draft categories
                                 </a>
                             </li>
                         </ul>
@@ -59,13 +53,23 @@ export class PageAdminTemplate extends PageTemplate {
                         </h6>
                         <ul class="nav flex-column mb-auto">
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" href="/admin/movies/new">
                                     Add new
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" href="/admin/movies">
                                     All movies
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" href="/admin/movies/published">
+                                    Published movies
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" href="/admin/movies/draft">
+                                    Draft movies
                                 </a>
                             </li>
                         </ul>
@@ -82,16 +86,6 @@ export class PageAdminTemplate extends PageTemplate {
             </div>`;
     }
 
-    async adminContent() {
-        return `
-            <div class="container-fluid">
-                <div class="row">
-                    ${this.adminSidebar()}
-                    ${await this.main()}
-                </div>
-            </div>`;
-    }
-
     async render() {
         return `
             <!DOCTYPE html>
@@ -99,7 +93,12 @@ export class PageAdminTemplate extends PageTemplate {
             ${this.head()}
             <body>
                 ${this.header()}
-                ${this.req.user.isLoggedIn ? await this.adminContent() : this.notLoggedInContent()}
+                <div class="container-fluid">
+                    <div class="row">
+                        ${this.adminSidebar()}
+                        ${await this.main()}
+                    </div>
+                </div>
                 ${this.footer()}
                 ${this.script()}
             </body>

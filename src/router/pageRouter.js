@@ -4,12 +4,10 @@ import { Page404 } from '../pages/public/Page404.js';
 import { PageMovies } from '../pages/public/PageMovies.js';
 import { PageCategories } from '../pages/public/PageCategories.js';
 import { PageMovieInner } from '../pages/public/PageMovieInner.js';
-import { PageRegister } from '../pages/public/PageRegister.js';
-import { PageLogin } from '../pages/public/PageLogin.js';
-import { PageLogout } from '../pages/public/PageLogout.js';
 import { PageCategoryInner } from '../pages/public/PageCategoryInner.js';
-
-import { PageDashboard } from '../pages/admin/PageDashboard.js';
+import { adminRouter } from './adminRouter.js';
+import { authRouter } from './authRouter.js';
+import { isAdmin } from '../middleware/isAdmin.js';
 
 export const pageRouter = express.Router();
 
@@ -19,10 +17,7 @@ pageRouter.get('/movies/:movieTitle', async (req, res) => res.send(await (new Pa
 pageRouter.get('/movies-by-category', async (req, res) => res.send(await (new PageCategories(req)).render()));
 pageRouter.get('/movies-by-category/:categoryName', async (req, res) => res.send(await (new PageCategoryInner(req)).render()));
 
-pageRouter.get('/register', async (req, res) => res.send(await (new PageRegister(req)).render()));
-pageRouter.get('/login', async (req, res) => res.send(await (new PageLogin(req)).render()));
-pageRouter.get('/logout', async (req, res) => res.send(await (new PageLogout(req)).render()));
-
-pageRouter.get('/dashboard', async (req, res) => res.send(await (new PageDashboard(req)).render()));
+pageRouter.use('/', authRouter);
+pageRouter.use('/admin', isAdmin, adminRouter);
 
 pageRouter.get('*error', async (req, res) => res.send(await (new Page404(req)).render()));

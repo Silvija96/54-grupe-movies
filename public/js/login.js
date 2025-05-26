@@ -33,7 +33,7 @@ if (formDOM) {
                     alertDOM.classList.remove('d-none', 'alert-danger');
                     alertDOM.classList.add('alert-success');
 
-                    location.href = '/dashboard';
+                    location.href = data.redirectTo;
                 }
             })
             .catch(err => console.log(err));

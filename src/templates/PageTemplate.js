@@ -34,7 +34,7 @@ export class PageTemplate {
             { href: '/register', text: 'Register' },
         ];
         const userMenu = [
-            { href: '/dashboard', text: 'Dashboard' },
+            { href: '/admin', text: 'Dashboard' },
             { href: '/logout', text: 'Logout' },
         ];
         const menu = publicMenu.concat(this.req.user.isLoggedIn ? userMenu : authMenu);

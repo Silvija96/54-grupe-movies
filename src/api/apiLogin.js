@@ -73,5 +73,6 @@ export async function apiLogin(req, res) {
         .json({
             status: 'success',
             msg: 'Jus buvote sekmingai prijungti prie sistemos',
+            redirectTo: '/admin',
         });
 }

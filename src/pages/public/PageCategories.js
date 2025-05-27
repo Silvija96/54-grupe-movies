@@ -1,5 +1,5 @@
 import { categoriesList } from "../../components/categoriesList.js";
-import { getAllCategories } from "../../db/getAllCategories.js";
+import { getAllCategories } from "../../db/public/categories.js";
 import { PageTemplate } from "../../templates/PageTemplate.js";
 
 export class PageCategories extends PageTemplate {

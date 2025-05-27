@@ -1,4 +1,4 @@
-import { getAllMovies } from "../../db/getAllMovies.js";
+import { getAllMovies } from "../../db/public/movies.js";
 import { formatMovieDuration } from "../../lib/formatMovieDuration.js";
 import { PageTemplate } from "../../templates/PageTemplate.js";
 

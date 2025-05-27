@@ -1,4 +1,5 @@
 import { categoriesList } from "../../components/categoriesList.js";
+import { getFeaturedCategories } from "../../db/public/categories.js";
 import { PageTemplate } from "../../templates/PageTemplate.js";
 
 export class PageHome extends PageTemplate {
@@ -23,8 +24,8 @@ export class PageHome extends PageTemplate {
             </div>`;
     }
 
-    featuredMovieCategoriesSection() {
-        const data = [];
+    async featuredMovieCategoriesSection() {
+        const data = await getFeaturedCategories();
 
         return `
             <style>
@@ -55,7 +56,7 @@ export class PageHome extends PageTemplate {
         return `
             <main>
                 ${this.heroSection()}
-                ${this.featuredMovieCategoriesSection()}
+                ${await this.featuredMovieCategoriesSection()}
             </main>`;
     }
 }

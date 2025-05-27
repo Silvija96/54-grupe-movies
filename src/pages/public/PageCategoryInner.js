@@ -1,4 +1,4 @@
-import { getMoviesByCategory } from "../../db/getMoviesByCategory.js";
+import { getMoviesByCategory } from "../../db/public/movies.js";
 import { formatMovieDuration } from "../../lib/formatMovieDuration.js";
 import { PageTemplate } from "../../templates/PageTemplate.js";
 
@@ -9,9 +9,8 @@ export class PageCategoryInner extends PageTemplate {
     }
 
     async moviesList(category) {
-        let HTML = '';
-
         const moviesData = await getMoviesByCategory(category);
+        let HTML = '';
 
         for (const item of moviesData) {
             HTML += `

@@ -1,6 +1,6 @@
-import { connection } from "../db.js";
-import { IsValid } from "../lib/IsValid.js";
-import { randomString } from "../lib/randomString.js";
+import { connection } from "../../db.js";
+import { IsValid } from "../../lib/IsValid.js";
+import { randomString } from "../../lib/randomString.js";
 
 export async function apiLogin(req, res) {
     const [err, msg] = IsValid.requiredFields(req.body, [

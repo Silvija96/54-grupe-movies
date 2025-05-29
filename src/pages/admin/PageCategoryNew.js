@@ -1,6 +1,6 @@
 import { AdminPageTemplate } from "../../templates/AdminPageTemplate.js";
 
-export class PageAdminNewCategory extends AdminPageTemplate {
+export class PageAdminCategoryNew extends AdminPageTemplate {
     constructor(req) {
         super(req);
         this.activeMenuIndex = this.req.user.isLoggedIn ? 3 : -1;
@@ -34,9 +34,22 @@ export class PageAdminNewCategory extends AdminPageTemplate {
                                 Valid description is required.
                             </div>
                         </div>
+                        <div class="my-3">
+                            <div class="form-check">
+                                <input id="draft" value="draft" name="status" type="radio" class="form-check-input" checked required>
+                                <label class="form-check-label" for="draft">Draft</label>
+                            </div>
+                            <div class="form-check">
+                                <input id="publish" value="publish" name="status" type="radio" class="form-check-input" required>
+                                <label class="form-check-label" for="publish">Publish</label>
+                            </div>
+                        </div>
                     </div>
                     <hr class="my-4">
-                    <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+                    <div class="d-flex" style="gap: 1rem;">
+                        <button class="btn btn-success btn-lg" type="submit">Create</button>
+                        <button class="btn btn-secondary btn-lg ms-auto" type="reset">Reset</button>
+                    </div>
                 </form>
             </main>`;
     }

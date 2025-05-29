@@ -1,11 +1,12 @@
 import { tableCategories } from "../../components/tableCategories.js";
-import { getAllCategories } from "../../db/admin/getAllCategories.js";
+import { getAllCategories } from "../../db/admin/categories.js";
 import { AdminPageTemplate } from "../../templates/AdminPageTemplate.js";
 
 export class PageAdminCategories extends AdminPageTemplate {
     constructor(req) {
         super(req);
         this.activeMenuIndex = this.req.user.isLoggedIn ? 3 : -1;
+        this.pageJS = 'admin-category-delete';
     }
 
     async main() {

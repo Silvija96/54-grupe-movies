@@ -1,5 +1,5 @@
 import { tableCategories } from "../../components/tableCategories.js";
-import { getCategoriesPublished } from "../../db/admin/getAllCategories.js";
+import { getCategoriesPublished } from "../../db/admin/categories.js";
 import { AdminPageTemplate } from "../../templates/AdminPageTemplate.js";
 
 export class PageAdminCategoriesPublished extends AdminPageTemplate {

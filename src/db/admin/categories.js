@@ -46,3 +46,14 @@ export async function getCategoriesPublished() {
         return [];
     }
 }
+
+export async function getCategoryByUrlSlug(urlSlug) {
+    try {
+        const sql = `SELECT * FROM categories WHERE url_slug = ?;`;
+        const [result] = await connection.query(sql, [urlSlug]);
+        return result.length ? result[0] : null;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}

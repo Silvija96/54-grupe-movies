@@ -6,6 +6,7 @@ export async function apiCategoriesPost(req, res) {
         { field: 'name', validation: IsValid.nonEmptyString },
         { field: 'url', validation: IsValid.urlSlug },
         { field: 'description', validation: IsValid.nonEmptyString },
+        { field: 'status', validation: IsValid.includesInList, options: ['draft', 'publish'] },
     ]);
 
     if (err) {
@@ -15,11 +16,11 @@ export async function apiCategoriesPost(req, res) {
         });
     }
 
-    const { name, url, description } = req.body;
+    const { name, url, description, status } = req.body;
 
     try {
-        const sql = 'SELECT * FROM categories WHERE name = ? AND url_slug = ? AND description = ?;';
-        const [result] = await connection.query(sql, [name, url, description]);
+        const sql = 'SELECT * FROM categories WHERE name = ? OR url_slug = ?;';
+        const [result] = await connection.query(sql, [name, url]);
 
         if (result.length > 0) {
             return res.json({
@@ -36,8 +37,8 @@ export async function apiCategoriesPost(req, res) {
     }
 
     try {
-        const sql = 'INSERT INTO categories (name, url_slug, description) VALUES (?, ?, ?);';
-        const [result] = await connection.query(sql, [name, url, description]);
+        const sql = 'INSERT INTO categories (name, url_slug, description, is_published) VALUES (?, ?, ?, ?);';
+        const [result] = await connection.query(sql, [name, url, description, status === 'publish' ? 1 : 0]);
 
         if (result.affectedRows !== 1) {
             return res.json({

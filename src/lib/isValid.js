@@ -3,11 +3,14 @@ export class IsValid {
      * 
      * @param {Object} clientData Is kliento gautas isparsintas JSON objektas
      * @param {Object[]} requiredFields Privalomu lauku validavimo taisykles
+     * @param {Object[]} optionalFields Privalomu lauku validavimo taisykles
      * @param {string} requiredFields[].field Privalomo lauko pavadinimas
      * @param {Function} requiredFields[].validation Privalomo lauko reiksme validuojanti funkcija / statinis metodas
+     * @param {string} optionalFields[].field Neprivalomo lauko pavadinimas
+     * @param {Function} optionalFields[].validation Neprivalomo lauko reiksme validuojanti funkcija / statinis metodas
      * @returns 
      */
-    static requiredFields(clientData, requiredFields) {
+    static requiredFields(clientData, requiredFields, optionalFields = []) {
         if (typeof clientData !== 'object'
             || Array.isArray(clientData)
             || clientData === null
@@ -15,16 +18,47 @@ export class IsValid {
             return [true, 'Reikalingas validus objektas'];
         }
 
-        if (Object.keys(clientData).length !== requiredFields.length) {
-            const names = requiredFields.map(obj => obj.field).join(', ');
-            return [true, 'Reikalingi laukai yra: ' + names];
+        // ar turim visus privalomus laukus?
+        for (const { field } of requiredFields) {
+            if (!(field in clientData)) {
+                const names = requiredFields.map(obj => obj.field).join(', ');
+                return [true, 'Reikalingi laukai yra: ' + names];
+            }
         }
 
-        for (const { field, validation } of requiredFields) {
-            const [err, msg] = validation(clientData[field]);
+        // ar nera neleistinu lauku?
+        const totalAvailableKeys = [];
+        for (const { field } of requiredFields) {
+            totalAvailableKeys.push(field);
+        }
+        for (const { field } of optionalFields) {
+            totalAvailableKeys.push(field);
+        }
+
+        const clientKeys = Object.keys(clientData);
+
+        for (const key of clientKeys) {
+            if (!totalAvailableKeys.includes(key)) {
+                return [true, 'Rastas neleistinas raktas: ' + key];
+            }
+        }
+
+        // duomenu validavimas
+        for (const { field, validation, options } of requiredFields) {
+            const [err, msg] = validation(clientData[field], options);
 
             if (err) {
                 return [err, msg];
+            }
+        }
+
+        for (const { field, validation, options } of optionalFields) {
+            if (field in clientData) {
+                const [err, msg] = validation(clientData[field], options);
+
+                if (err) {
+                    return [err, msg];
+                }
             }
         }
 
@@ -205,6 +239,14 @@ export class IsValid {
 
         if (errors.length) {
             return [true, `Rasti neleistini simboliai: ${errors.join(', ')}.`];
+        }
+
+        return [false, 'Ok'];
+    }
+
+    static includesInList(text, allowedValues) {
+        if (typeof text !== 'string' || text === '' || !allowedValues.includes(text)) {
+            return [true, `Turi buti tinkamas statusas: ${allowedValues.join(', ')}.`];
         }
 
         return [false, 'Ok'];

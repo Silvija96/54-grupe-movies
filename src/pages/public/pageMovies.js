@@ -1,3 +1,4 @@
+import { getAllCategories } from "../../db/public/categories.js";
 import { getAllMovies } from "../../db/public/movies.js";
 import { formatMovieDuration } from "../../lib/formatMovieDuration.js";
 import { PageTemplate } from "../../templates/PageTemplate.js";
@@ -14,10 +15,12 @@ export class PageMovies extends PageTemplate {
         const moviesData = await getAllMovies();
 
         for (const item of moviesData) {
+            const img = item.thumbnail ? `/img/movie-thumbnails/${item.thumbnail}` : '/img/default.webp';
+
             HTML += `
                 <div class="col">
                     <div class="card shadow-sm">
-                        <img src="/img/movie-thumbnails/${item.thumbnail}" class="movie-card-thumbnail card-img-top" style="height: 225px;">
+                        <img src="${img}" class="movie-card-thumbnail card-img-top" style="height: 225px;">
                         <div class="card-body">
                             <a href="/movies/${item.url_slug}" class="h4">${item.title}</a>
                             <p class="card-text">${item.description}</p>
@@ -51,6 +54,13 @@ export class PageMovies extends PageTemplate {
     }
 
     async main() {
+        const categories = await getAllCategories();
+        let catHTML = '<option value="0">All</option>';
+
+        for (const cat of categories) {
+            catHTML += `<option value="${cat.id}">${cat.name}</option>`;
+        }
+
         return `
             <main>
                 <div class="container">
@@ -59,6 +69,32 @@ export class PageMovies extends PageTemplate {
                             <h1 class="display-1">All movies</h1>
                         </div>
                     </div>
+                </div>
+                <div class="container mb-5">
+                    <form action=""  class="row">
+                        <div class="col-12 col-lg-6">
+                            <label>Texts</label>
+                            <input class="form-control" type="text">
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label>Genre</label>
+                            <select class="form-control">${catHTML}</select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label>Duration</label>
+                            <select class="form-control">
+                                <option value="all">All</option>
+                                <option value="1">0..1 hour</option>
+                                <option value="2">1..2 hours</option>
+                                <option value="3">2..3 hours</option>
+                                <option value="4">3+ hours</option>
+                            </select>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <input class="form-check-input" type="checkbox" checked>
+                            <label>With thumbnails</label>
+                        </div>
+                    </form>
                 </div>
                 ${await this.moviesList()}
             </main>`;

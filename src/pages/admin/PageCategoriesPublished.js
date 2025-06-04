@@ -6,6 +6,7 @@ export class PageAdminCategoriesPublished extends AdminPageTemplate {
     constructor(req) {
         super(req);
         this.activeMenuIndex = this.req.user.isLoggedIn ? 3 : -1;
+        this.pageJS = 'admin-category-delete';
     }
 
     async main() {

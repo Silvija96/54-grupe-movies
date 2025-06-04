@@ -6,6 +6,7 @@ export class PageAdminMoviesPublished extends AdminPageTemplate {
     constructor(req) {
         super(req);
         this.activeMenuIndex = this.req.user.isLoggedIn ? 3 : -1;
+        this.pageJS = 'admin-movie-delete';
     }
 
     async main() {

@@ -1,7 +1,8 @@
 import { getAllCategories } from "../../db/admin/categories.js";
+import { getMovieByUrlSlug } from "../../db/admin/movies.js";
 import { AdminPageTemplate } from "../../templates/AdminPageTemplate.js";
 
-export class PageAdminMovieNew extends AdminPageTemplate {
+export class PageAdminMovieEdit extends AdminPageTemplate {
     constructor(req) {
         super(req);
         this.activeMenuIndex = this.req.user.isLoggedIn ? 3 : -1;
@@ -9,16 +10,27 @@ export class PageAdminMovieNew extends AdminPageTemplate {
     }
 
     async main() {
+        const data = await getMovieByUrlSlug(this.req.params.urlSlug);
+
+        if (!data) {
+            return `
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                    <h1 class="h2">Toks filmas neegzistuoja</h1>
+                </main>`;
+        }
+
         const categories = await getAllCategories();
 
-        let categoriesHTML = '<option value="0">-- select category</option>';
+        let categoriesHTML = `<option value="0" ${data.category_id === 0 ? 'selected' : ''}>-- select category</option>`;
         for (const cat of categories) {
-            categoriesHTML += `<option value="${cat.id}">${cat.name}</option>`;
+            categoriesHTML += `<option value="${cat.id}" ${data.category_id === cat.id ? 'selected' : ''}>${cat.name}</option>`;
         }
+
+        const img = data.thumbnail ? `/img/movie-thumbnails/${data.thumbnail}` : '/img/default.webp';
 
         return `
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <h1 class="h2">New movie</h1>
+                <h1 class="h2">Edit movie: ${data.title}</h1>
                 <form action="/api/admin/upload" data-method="POST" enctype="multipart/form-data" class="needs-validation col-12 col-md-10 col-lg-8 col-xl-6 mb-3">
                     <div class="row g-3">
                         <div class="col-12">
@@ -28,28 +40,28 @@ export class PageAdminMovieNew extends AdminPageTemplate {
                                 Valid image is required.
                             </div>
                         </div>
-                        <img id="image" class="col-12" style="max-height: 20rem; object-fit: contain;" src="/img/default.webp" alt="">
+                        <img id="image" class="col-12" style="max-height: 20rem; object-fit: contain;" src="${img}" alt="">
                     </div>
                 </form>
-                <form action="/api/admin/movies" data-method="POST" class="needs-validation col-12 col-md-10 col-lg-8 col-xl-6">
+                <form action="/api/admin/movies/${data.id}" data-method="PUT" class="needs-validation col-12 col-md-10 col-lg-8 col-xl-6">
                     <div class="row g-3">
                         <div class="col-sm-12">
                             <label for="name" class="form-label">Movie name</label>
-                            <input type="text" class="form-control" id="name" placeholder="" value="" required>
+                            <input type="text" class="form-control" id="name" placeholder="" value="${data.title}" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
                         </div>
                         <div class="col-sm-12">
                             <label for="url" class="form-label">URL slug</label>
-                            <input type="text" class="form-control" id="url" placeholder="" value="" required>
+                            <input type="text" class="form-control" id="url" placeholder="" value="${data.url_slug}" required>
                             <div class="invalid-feedback">
                                 Valid last name is required.
                             </div>
                         </div>
                         <div class="col-sm-12">
                             <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" id="description" placeholder=""></textarea>
+                            <textarea class="form-control" id="description" placeholder="">${data.description}</textarea>
                             <div class="invalid-feedback">
                                 Valid description is required.
                             </div>
@@ -57,11 +69,11 @@ export class PageAdminMovieNew extends AdminPageTemplate {
                         <p class="col-sm-12 mb-0">Duration:</p>
                         <div class="col-sm-6">
                             <label for="duration_hours" class="form-label">hours</label>
-                            <input type="number" min="0" max="10" step="1" class="form-control" id="duration_hours" placeholder="" value="0">
+                            <input type="number" min="0" max="10" step="1" class="form-control" id="duration_hours" placeholder="" value="${Math.floor(data.duration / 60)}">
                         </div>
                         <div class="col-sm-6">
                             <label for="duration_minutes" class="form-label">minutes</label>
-                            <input type="number" min="0" max="59" step="1" class="form-control" id="duration_minutes" placeholder="" value="0">
+                            <input type="number" min="0" max="59" step="1" class="form-control" id="duration_minutes" placeholder="" value="${data.duration % 60}">
                         </div>
                         <div class="col-12 col-sm-6">
                             <label for="category" class="form-label">Genre</label>
@@ -80,7 +92,7 @@ export class PageAdminMovieNew extends AdminPageTemplate {
                     </div>
                     <hr class="my-4">
                     <div class="d-flex" style="gap: 1rem;">
-                        <button class="btn btn-success btn-lg" type="submit">Create</button>
+                        <button class="btn btn-success btn-lg" type="submit">Update</button>
                         <button class="btn btn-secondary btn-lg ms-auto" type="reset">Reset</button>
                     </div>
                 </form>

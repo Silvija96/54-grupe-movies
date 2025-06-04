@@ -47,3 +47,14 @@ export async function getAllMoviesPublished() {
         return [];
     }
 }
+
+export async function getMovieByUrlSlug(urlSlug) {
+    try {
+        const sql = `SELECT * FROM movies WHERE url_slug = ?;`;
+        const [results] = await connection.query(sql, [urlSlug]);
+        return results.length ? results[0] : null;
+    } catch (err) {
+        console.log(err);
+        return [];
+    }
+}

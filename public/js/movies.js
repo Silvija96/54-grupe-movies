@@ -5,15 +5,22 @@ const durationSelectDOM = formDOM.elements[2];
 const thumbnailDOM = formDOM.elements[3];
 
 function getData() {
-    const params = new URLSearchParams({
-        text: textInputDOM.value,
-        genre: genreSelectDOM.value,
-        duration: durationSelectDOM.value,
-        thumbnail: thumbnailDOM.checked,
-    }).toString();
+    const data = {};
 
+    if (textInputDOM.value.trim()) {
+        data.text = textInputDOM.value.trim();
+    }
+    if (genreSelectDOM.value !== '0') {
+        data.genre = genreSelectDOM.value;
+    }
+    if (durationSelectDOM.value !== '0') {
+        data.duration = durationSelectDOM.value;
+    }
+    if (thumbnailDOM.checked === true) {
+        data.thumbnail = true;
+    }
 
-    fetch('/api/movies?' + params)
+    fetch('/api/movies?' + (new URLSearchParams(data).toString()))
         .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {

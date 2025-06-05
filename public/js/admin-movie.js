@@ -69,7 +69,9 @@ if (contentFormDOM) {
         })
             .then(data => data.json())
             .then(data => {
-                console.log(data);
+                if (data.status === 'success') {
+                    location.href = '/admin/movies';
+                }
             })
             .catch(err => console.log(err));
     });

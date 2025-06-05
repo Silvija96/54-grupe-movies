@@ -11,12 +11,15 @@ import { apiMoviesPost } from '../api/admin/apiMoviesPost.js';
 import { apiMoviesDelete } from '../api/admin/apiMoviesDelete.js';
 import { apiMoviesPut } from '../api/admin/apiMoviesPut.js';
 import { apiUpload } from '../api/admin/apiUpload.js';
+import { apiPublicMoviesGet } from '../api/public/apiMovies.js';
 
 export const apiRouter = express.Router();
 
 apiRouter.post('/api/register', apiRegister);
 apiRouter.post('/api/login', apiLogin);
 apiRouter.get('/api/logout', apiLogout);
+
+apiRouter.get('/api/movies', apiPublicMoviesGet);
 
 apiRouter.post('/api/admin/categories', isAdminAPI, apiCategoriesPost);
 apiRouter.put('/api/admin/categories/:id', isAdminAPI, apiCategoriesPut);

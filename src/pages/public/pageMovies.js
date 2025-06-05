@@ -7,6 +7,7 @@ export class PageMovies extends PageTemplate {
     constructor(req) {
         super(req);
         this.activeMenuIndex = 1;
+        this.pageJS = 'movies';
     }
 
     async moviesList() {
@@ -21,6 +22,7 @@ export class PageMovies extends PageTemplate {
                 <div class="col">
                     <div class="card shadow-sm">
                         <img src="${img}" class="movie-card-thumbnail card-img-top" style="height: 225px;">
+                        <div class="badge bg-primary movie-card-badge">${item.categoryName}</div>
                         <div class="card-body">
                             <a href="/movies/${item.url_slug}" class="h4">${item.title}</a>
                             <p class="card-text">${item.description}</p>
@@ -71,7 +73,7 @@ export class PageMovies extends PageTemplate {
                     </div>
                 </div>
                 <div class="container mb-5">
-                    <form action=""  class="row">
+                    <form action="" class="row">
                         <div class="col-12 col-lg-6">
                             <label>Texts</label>
                             <input class="form-control" type="text">
@@ -92,7 +94,7 @@ export class PageMovies extends PageTemplate {
                         </div>
                         <div class="col-12 mt-3">
                             <input class="form-check-input" type="checkbox" checked>
-                            <label>With thumbnails</label>
+                            <label>Only with thumbnails</label>
                         </div>
                     </form>
                 </div>

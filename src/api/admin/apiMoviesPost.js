@@ -31,7 +31,7 @@ export async function apiMoviesPost(req, res) {
     const { name, url, description, status, hours, minutes, category, image } = req.body;
     const duration = (hours ?? 0) * 60 + (minutes ?? 0);
     const statusIndex = status === 'publish' ? 1 : 0;
-    const imageFileName = image.slice(22);
+    const imageFileName = image ? image.slice(22) : '';
 
     try {
         const sql = 'SELECT * FROM movies WHERE title = ? OR url_slug = ?;';

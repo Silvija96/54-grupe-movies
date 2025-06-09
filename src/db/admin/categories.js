@@ -7,7 +7,7 @@ export async function getAllCategories() {
                 ( SELECT COUNT(*) FROM movies WHERE movies.category_id = categories.id ) AS count
             FROM categories
             ORDER BY name;`;
-        const [result] = await connection.query(sql);
+        const [result] = await connection.execute(sql);
         return result;
     } catch (error) {
         console.log(error);
@@ -23,7 +23,7 @@ export async function getCategoriesDraft() {
             FROM categories
             WHERE is_published = 0
             ORDER BY name;`;
-        const [result] = await connection.query(sql);
+        const [result] = await connection.execute(sql);
         return result;
     } catch (error) {
         console.log(error);
@@ -39,7 +39,7 @@ export async function getCategoriesPublished() {
             FROM categories
             WHERE is_published = 1
             ORDER BY name;`;
-        const [result] = await connection.query(sql);
+        const [result] = await connection.execute(sql);
         return result;
     } catch (error) {
         console.log(error);
@@ -50,7 +50,7 @@ export async function getCategoriesPublished() {
 export async function getCategoryByUrlSlug(urlSlug) {
     try {
         const sql = `SELECT * FROM categories WHERE url_slug = ?;`;
-        const [result] = await connection.query(sql, [urlSlug]);
+        const [result] = await connection.execute(sql, [urlSlug]);
         return result.length ? result[0] : null;
     } catch (error) {
         console.log(error);

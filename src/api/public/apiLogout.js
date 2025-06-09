@@ -4,7 +4,7 @@ export async function apiLogout(req, res) {
     if (req.cookies.loginToken) {
         try {
             const sql = 'DELETE FROM tokens WHERE text = ?;';
-            const [result] = await connection.query(sql, [req.cookies.loginToken]);
+            const [result] = await connection.execute(sql, [req.cookies.loginToken]);
 
             if (result.affectedRows !== 1) {
                 // TODO

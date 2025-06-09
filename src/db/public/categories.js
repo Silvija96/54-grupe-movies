@@ -12,7 +12,7 @@ export async function getAllCategories() {
             FROM categories
             WHERE is_published = 1
             ORDER BY name;`;
-        const [result] = await connection.query(sql);
+        const [result] = await connection.execute(sql);
         return result;
     } catch (error) {
         console.log(error);
@@ -34,7 +34,7 @@ export async function getFeaturedCategories() {
             WHERE is_published = 1
             ORDER BY count DESC
             LIMIT 3;`;
-        const [result] = await connection.query(sql);
+        const [result] = await connection.execute(sql);
         return result;
     } catch (error) {
         console.log(error);

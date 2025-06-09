@@ -20,7 +20,7 @@ export async function getUserData(req, res, next) {
             INNER JOIN tokens
                 ON users.id = tokens.user_id
             WHERE tokens.text = ?;`;
-        const [result] = await connection.query(sql, [req.cookies.loginToken]);
+        const [result] = await connection.execute(sql, [req.cookies.loginToken]);
 
         if (result.length === 1) {
             req.user = {

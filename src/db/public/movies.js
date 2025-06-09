@@ -8,7 +8,7 @@ export async function getAllMovies() {
             INNER JOIN categories ON movies.category_id = categories.id
             WHERE movies.is_published = 1 AND categories.is_published = 1
             ORDER BY id;`;
-        const [results] = await connection.query(sql);
+        const [results] = await connection.execute(sql);
 
         return results;
     } catch (err) {
@@ -27,7 +27,7 @@ export async function getMoviesByCategory(category) {
                 movies.is_published = 1 AND
                 categories.is_published = 1 AND
                 categories.url_slug = ?;`;
-        const [results] = await connection.query(sql, [category]);
+        const [results] = await connection.execute(sql, [category]);
 
         return results;
     } catch (err) {
@@ -43,7 +43,7 @@ export async function getMovieBySlug(urlSlug) {
             FROM movies
             INNER JOIN categories ON movies.category_id = categories.id
             WHERE movies.url_slug = ? AND movies.is_published = 1;`;
-        const [results] = await connection.query(sql, [urlSlug]);
+        const [results] = await connection.execute(sql, [urlSlug]);
         return results;
     } catch (err) {
         console.log(err);

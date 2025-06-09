@@ -32,33 +32,34 @@ export async function apiPublicMoviesGet(req, res) {
     const sqlData = [];
 
     if (text) {
-        sqlParts.push(`(title LIKE CONCAT("%", ?, "%") OR description LIKE CONCAT("%", ?, "%"))`);
+        sqlParts.push(`(movies.title LIKE CONCAT("%", ?, "%") OR movies.description LIKE CONCAT("%", ?, "%"))`);
         sqlData.push(text, text);
     }
 
     if (genre) {
-        sqlParts.push('category_id = ?');
+        sqlParts.push('movies.category_id = ?');
         sqlData.push(genre);
     }
 
     if (duration) {
-        sqlParts.push('duration >= ?');
+        sqlParts.push('movies.duration >= ?');
         sqlData.push((duration - 1) * 60);
 
         if (duration !== 4) {
-            sqlParts.push('duration <= ?');
+            sqlParts.push('movies.duration <= ?');
             sqlData.push(duration * 60 - 1);
         }
     }
 
     if (thumbnail) {
-        sqlParts.push('thumbnail != ""');
+        sqlParts.push('movies.thumbnail != ""');
     }
 
     try {
         const sql = `
-            SELECT *
-            FROM movies 
+            SELECT movies.*, categories.name AS categoryName, categories.url_slug AS categoryUrlSlug
+            FROM movies
+            INNER JOIN categories ON movies.category_id = categories.id
             ${sqlParts.length ? 'WHERE ' + sqlParts.join(' AND ') : ''};`;
         const [result] = await connection.execute(sql, sqlData);
 
